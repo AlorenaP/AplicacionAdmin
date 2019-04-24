@@ -29,6 +29,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +37,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-        if(status== ConnectionResult.SUCCESS) { //el if no es necesario.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (status == ConnectionResult.SUCCESS) {
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map); //referencia a el fragment del mapa de cali
+            mapFragment.getMapAsync(this);
 
-    }else {
+        } else {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, (Activity) getApplicationContext(), 10);
             dialog.show();
         }
@@ -51,7 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * we just add a marker near Cali, Colombia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -62,50 +63,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Cali and move the camera
         LatLng cali = new LatLng(3.42158, -76.5205);
-        mMap.addMarker(new MarkerOptions().position(cali).title("Marker in cali").icon(
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))); //titulo del marcador, tambien se le cambia el color
-        float zoomlevel=12;
+        mMap.addMarker(new MarkerOptions().position(cali).title("Esta en Cali").icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))); //titulo del marcador, tambien se le cambia el color al marcador
+        float zoomlevel = 12;
         //googleMap.moveCamera(CameraUpdateFactory.newLatLng(cali));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cali, zoomlevel));
 
     }
 
-    private void goToLocation(double lat, double lng) {
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
-        mMap.moveCamera(update);
-    }
-
+    /**
+     * Este metodo permite actualizar las coordenadas de ubicación en el mapa
+     * para asi, permitir el desplazamiento hacia la zona indicada y se aplica zoom.  Para esto se toma como parametro
+     *
+     * @param lat coordenas en latitud.
+     * @param lng coordenadas en longitud
+     */
     private void goToLocationZoom(double lat, double lng, float zoom) {
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         mMap.moveCamera(update);
     }
 
+
     Marker marker;
 
-    public void geoLocate(View view) throws IOException {
+    /**
+     * @param view
+     * @throws IOException
+     */
 
+    public void geoLocate(View view) throws IOException {
         List<Address> list = null;
         EditText et = (EditText) findViewById(R.id.editText);
-        String location = et.getText().toString();
-        if(!location.equals("")|| !location.isEmpty()) {
+        location = et.getText().toString();
+        // se ingresa el nombre de la zona a buscar, si esta no es vacia o null, entonces entra a buscar y ubicar en el mapa
+        if (!location.equals("") || !location.isEmpty()) {
             Geocoder gc = new Geocoder(this);
+            //tengo problema aqui
+            list = gc.getFromLocationName(location, 1);
 
-                //tengo problema aqui
-                list = gc.getFromLocationName(location, 1);
+            Address address = list.get(0);
+            String locality = address.getLocality();
+            Toast.makeText(this, locality, Toast.LENGTH_LONG).show();
 
-                Address address = list.get(0);
-                String locality = address.getLocality();
-                Toast.makeText(this, locality, Toast.LENGTH_LONG).show();
+            double lat = address.getLatitude();
+            double lng = address.getLongitude();
+            goToLocationZoom(lat, lng, 15);
+            setMarker(locality, lat, lng);
 
-                double lat = address.getLatitude();
-                double lng = address.getLongitude();
-                goToLocationZoom(lat, lng, 15);
-                setMarker(locality, lat, lng);
-
-        }else{
-            Toast.makeText(MapsActivity.this,"Por favor ingresar una ubicación",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(MapsActivity.this, "Por favor ingresar una el nombre del lugar a ubicar", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -114,15 +121,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //  static final int POLYGON_POINTS = 5;
     //Polygon shape;
 
-    private void setMarker(String locality, double lat, double lng) {
-/**
- if (markers.size() == POLYGON_POINTS) {
- removeEverything();
- }**/
+    /**
+     * permite agregar o pintar los marcadores en el mapa, en la posición indicada que entra por parametro
+     * @param locality
+     * @param lat
+     * @param lng
+     */
 
+    private void setMarker(String locality, double lat, double lng) {
+    /**
+      if (markers.size() == POLYGON_POINTS) {
+      removeEverything();
+     }**/
+
+//lo cambie
+        locality = location;
         MarkerOptions options = new MarkerOptions()
                 .title(locality)
-                .draggable(true)
+                .draggable(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
                 .position(new LatLng(lat, lng))
                 .snippet("I am Here");
@@ -145,7 +161,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 //        circle = drawCircle(new LatLng(lat, lng));
     }
-
 
 
     /** private void drawPolygon() {
