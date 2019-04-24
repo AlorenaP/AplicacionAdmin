@@ -38,23 +38,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private String location;
-
     // Progress Dialog
     private ProgressDialog pDialog;
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     ArrayList<HashMap<String, String>> nodos;
-    // url to get all products list
-    private static String URL_ALL_NODES = "http://172.30.200.99/marcadores/nodos.php";
+    // url to get all nodes list
+    private static String URL_ALL_NODES = "http://172.30.200.99/testgeo/nodos.php";
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_PRODUCTOS = "gps";
+    private static final String TAG_GPS = "gps";
     private static final String TAG_ID = "id";
     private static final String TAG_DIRECCION = "direccion";
     private static final String TAG_COORDENADAS = "coordenadas";
     // objetos JSONArray
-    JSONArray products = null;
-
+    JSONArray nodes = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +60,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         // Hashmap para los nodos
         nodos = new ArrayList<HashMap<String, String>>();
-
         //cargar los objetos tipo nodo en background thread
         new LoadAllNodes().execute();
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
         if (status == ConnectionResult.SUCCESS) {
@@ -73,10 +69,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .findFragmentById(R.id.map); //referencia a el fragment del mapa de cali
             mapFragment.getMapAsync(this);
 
+            /**
+             * aqui llamo al metodo para pintar los marcadores, con las posiciones extraidas de la base de datos.
+             */
+
+
         } else {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, (Activity) getApplicationContext(), 10);
             dialog.show();
         }
+    }
+
+
+    class LoadAllNodes extends AsyncTask<String, String, String> {
+
+        //Antes de empezar el background thread Show Progress Dialog
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MapsActivity.this);
+            pDialog.setMessage("Cargando, Por favor espere...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        /**
+         * obteniendo todos los nodos
+         * */
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            List params = new ArrayList();
+            // getting JSON string from URL
+            JSONObject json = jParser.makeHttpRequest(URL_ALL_NODES, "GET", params);
+            // Check your log cat for JSON reponse
+            Log.d("All Nodes: ", json.toString());
+            try {
+                // Checking for SUCCESS TAG
+                int success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    // nodes found
+                    // Getting Array of nodes
+                    nodes = json.getJSONArray(TAG_GPS);
+                    // looping through All Products
+                    //Log.i("ramiro", "produtos.length" + products.length());
+                    for (int i = 0; i < nodes.length(); i++) {
+                        JSONObject c = nodes.getJSONObject(i);
+                        // Storing each json item in variable
+                        String id = c.getString(TAG_ID);
+                        String direccion = c.getString(TAG_DIRECCION);
+                        String coordenadas = c.getString(TAG_COORDENADAS);
+                        // creating new HashMap
+                        HashMap map = new HashMap();
+
+                        // adding each child node to HashMap key => value
+                        map.put(TAG_ID, id);
+                        map.put(TAG_DIRECCION, direccion);
+                        map.put(TAG_COORDENADAS, coordenadas);
+
+                        nodos.add(map);
+                       // Address prueba = nodos.
+                       // setMarker(coordenadas);
+                        // aqui tengo todos los nodos en el hasmap, ya los puedo pintar. Hay es que pensar como sacar del String las dos coordenadas
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
     }
 
     /**
@@ -114,7 +177,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(update);
     }
 
-
     Marker marker;
 
     /**
@@ -142,7 +204,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             setMarker(locality, lat, lng);
 
         } else {
-            Toast.makeText(MapsActivity.this, "Por favor ingresar una el nombre del lugar a ubicar", Toast.LENGTH_LONG).show();
+            Toast.makeText(MapsActivity.this, "Por favor ingresar el nombre del lugar a ubicar", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -163,8 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
       if (markers.size() == POLYGON_POINTS) {
       removeEverything();
      }**/
-
-//lo cambie
+       //lo cambie
         locality = location;
         MarkerOptions options = new MarkerOptions()
                 .title(locality)
@@ -215,69 +276,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      shape = null;
 
      }**/
-
-    class LoadAllNodes extends AsyncTask<String,String,String> {
-
-        //Antes de empezar el background thread Show Progress Dialog
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(MapsActivity.this);
-            pDialog.setMessage("Cargando, Por favor espere...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        /**
-         * obteniendo todos los nodos
-         * */
-        protected String doInBackground(String... args) {
-            // Building Parameters
-            List params = new ArrayList();
-            // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(URL_ALL_NODES, "GET", params);
-
-            // Check your log cat for JSON reponse
-            Log.d("All Products: ", json.toString());
-
-            try {
-                // Checking for SUCCESS TAG
-                int success = json.getInt(TAG_SUCCESS);
-
-                if (success == 1) {
-                    // products found
-                    // Getting Array of Products
-                    products = json.getJSONArray(TAG_PRODUCTOS);
-
-                    // looping through All Products
-                    //Log.i("ramiro", "produtos.length" + products.length());
-                    for (int i = 0; i < products.length(); i++) {
-                        JSONObject c = products.getJSONObject(i);
-
-                        // Storing each json item in variable
-                        String id = c.getString(TAG_ID);
-                        String name = c.getString(TAG_DIRECCION);
-
-                        // creating new HashMap
-                        HashMap map = new HashMap();
-
-                        // adding each child node to HashMap key => value
-                        map.put(TAG_ID, id);
-                        map.put(TAG_NOMBRE, name);
-
-                        nodos.add(map);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
-
-
 
 }
