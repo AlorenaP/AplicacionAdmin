@@ -46,6 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ProgressDialog pDialog;
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
+    JSONObject json;
     ArrayList<HashMap<String, String>> nodos;
     // url to get all nodes list
     private static String URL_ALL_NODES = "http://172.30.200.99/testgeo/nodos.php";
@@ -56,6 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG_DIRECCION = "direccion";
     private static final String TAG_LATITUD = "latitud";
     private static final String TAG_LONGITUD = "longitud";
+
+    private String latitud, longitud;
     // objetos JSONArray
     JSONArray nodes = null;
 
@@ -72,21 +75,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map); //referencia a el fragment del mapa de cali
             mapFragment.getMapAsync(this);
-
+            new LoadAllNodes().execute();
         } else {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, (Activity) getApplicationContext(), 10);
             dialog.show();
         }
     }
 
-    /** private void drawMarkerPole(double latitud, double longitud){
-     System.out.println(nodos);
-     //extraer las coordenadas de la coleccion nodos
-
-     LatLng nodo= new LatLng(latitud,longitud);
-     mMap.addMarker(new MarkerOptions().position(nodo).icon(
-     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-     }**/
 
     /**
      * Manipulates the map once available.
@@ -100,17 +95,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add a marker in Cali and move the camera
         LatLng cali = new LatLng(3.42158, -76.5205);
         /**mMap.addMarker(new MarkerOptions().position(cali).title("Esta en Cali").icon(
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));**/ //titulo del marcador, tambien se le cambia el color al marcador
+        //cargar los objetos tipo nodo en background thread
         float zoomlevel = 12;
         //googleMap.moveCamera(CameraUpdateFactory.newLatLng(cali));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cali, zoomlevel));
-
-        //cargar los objetos tipo nodo en background thread
-        new LoadAllNodes().execute();
 
     }
 
@@ -138,10 +130,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         List<Address> list = null;
         EditText et = (EditText) findViewById(R.id.editText);
         location = et.getText().toString();
-        // se ingresa el nombre de la zona a buscar, si esta no es vacia o null, entonces entra a buscar y ubicar en el mapa
+        // se ingresa el nombre de la zona a buscar, sino es vacia o null, entonces entra a buscar y ubica en el mapa
         if (!location.equals("") || !location.isEmpty()) {
             Geocoder gc = new Geocoder(this);
-            //tengo problema aqui
+            //tengo problema aqui ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             list = gc.getFromLocationName(location, 1);
 
             Address address = list.get(0);
@@ -151,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = address.getLatitude();
             double lng = address.getLongitude();
             goToLocationZoom(lat, lng, 15);
-            setMarker(locality, lat, lng);
+           /// setMarker(locality, lat, lng);
 
         } else {
             Toast.makeText(MapsActivity.this, "Por favor ingresar el nombre del lugar a ubicar", Toast.LENGTH_LONG).show();
@@ -226,18 +218,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
      }**/
 
-
-    class LoadAllNodes extends AsyncTask<String, String, String> {
+    class LoadAllNodes extends AsyncTask<String, Void, String> {
 
         //Antes de empezar el background thread Show Progress Dialog
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(MapsActivity.this);
+            /**pDialog = new ProgressDialog(MapsActivity.this);
             pDialog.setMessage("Cargando, Por favor espere...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();
+            pDialog.show();**/
         }
 
         @Override
@@ -245,12 +236,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          * obteniendo todos los nodos
          * */
         protected String doInBackground(String... args) {
+
             // Building Parameters
             List params = new ArrayList();
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(URL_ALL_NODES, "GET", params);
+            json = jParser.makeHttpRequest(URL_ALL_NODES, "GET", params);
             // Check your log cat for JSON reponse
             Log.d("All Nodes: ", json.toString());
+            String result=json.toString();
+                        // creating new HashMap
+                       /** HashMap map = new HashMap();
+                        // adding each child node to HashMap key => value
+                        map.put(TAG_ID, id);
+                        map.put(TAG_DIRECCION, direccion);
+                        map.put(TAG_LATITUD, latitud);
+                        map.put(TAG_LONGITUD, longitud);
+                        nodos.add(map);**/
+                       // Address prueba = nodos.
+                       // setMarker(coordenadas)
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result)
+        {
             try {
                 // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
@@ -260,44 +269,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     nodes = json.getJSONArray(TAG_GPS);
                     // looping through All Products
                     Log.i("Lorena", "produtos.length " + nodes.length());
-
                     for (int i = 0; i < nodes.length(); i++) {
                         JSONObject c = nodes.getJSONObject(i);
                         // Storing each json item in variable
                         String id = c.getString(TAG_ID);
                         String direccion = c.getString(TAG_DIRECCION);
-                        String latitud = c.getString(TAG_LATITUD);
-                        String longitud = c.getString(TAG_LONGITUD);
+                        latitud = c.getString(TAG_LATITUD);
+                        longitud = c.getString(TAG_LONGITUD);
                         //Log.i("Lorena","latitud"+latitud);
-                        drawMarker(latitud,longitud);
-
-                        // creating new HashMap
-                       /** HashMap map = new HashMap();
-
-                        // adding each child node to HashMap key => value
-                        map.put(TAG_ID, id);
-                        map.put(TAG_DIRECCION, direccion);
-                        map.put(TAG_LATITUD, latitud);
-                        map.put(TAG_LONGITUD, longitud);
-
-                        nodos.add(map);**/
-                       // Address prueba = nodos.
-                       // setMarker(coordenadas);
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(Double.parseDouble(latitud), Double.parseDouble(longitud))).title("Nodo")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+
         }
 
 
-        private void drawMarker(String lati, String longi){
-
+      /**  private void drawMarker(String lati, String longi){
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(Double.parseDouble(lati), Double.parseDouble(longi))).title("Titulo")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-        }
+        }**/
 
 
     }
