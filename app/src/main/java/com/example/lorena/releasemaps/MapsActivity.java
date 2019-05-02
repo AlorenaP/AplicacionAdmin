@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.renderscript.Sampler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,9 +31,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -50,7 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG_GPS = "gps";
     private static final String TAG_ID = "id";
     private static final String TAG_DIRECCION = "direccion";
-    private static final String TAG_COORDENADAS = "coordenadas";
+    private static final String TAG_LATITUD = "latitud";
+    private static final String TAG_LONGITUD = "longitud";
     // objetos JSONArray
     JSONArray nodes = null;
 
@@ -60,8 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         // Hashmap para los nodos
         nodos = new ArrayList<HashMap<String, String>>();
-        //cargar los objetos tipo nodo en background thread
-        new LoadAllNodes().execute();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
         if (status == ConnectionResult.SUCCESS) {
@@ -69,78 +73,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .findFragmentById(R.id.map); //referencia a el fragment del mapa de cali
             mapFragment.getMapAsync(this);
 
-            /**
-             * aqui llamo al metodo para pintar los marcadores, con las posiciones extraidas de la base de datos.
-             */
-
-
         } else {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, (Activity) getApplicationContext(), 10);
             dialog.show();
         }
     }
 
+    /** private void drawMarkerPole(double latitud, double longitud){
+     System.out.println(nodos);
+     //extraer las coordenadas de la coleccion nodos
 
-    class LoadAllNodes extends AsyncTask<String, String, String> {
-
-        //Antes de empezar el background thread Show Progress Dialog
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(MapsActivity.this);
-            pDialog.setMessage("Cargando, Por favor espere...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        /**
-         * obteniendo todos los nodos
-         * */
-        protected String doInBackground(String... args) {
-            // Building Parameters
-            List params = new ArrayList();
-            // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(URL_ALL_NODES, "GET", params);
-            // Check your log cat for JSON reponse
-            Log.d("All Nodes: ", json.toString());
-            try {
-                // Checking for SUCCESS TAG
-                int success = json.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    // nodes found
-                    // Getting Array of nodes
-                    nodes = json.getJSONArray(TAG_GPS);
-                    // looping through All Products
-                    //Log.i("ramiro", "produtos.length" + products.length());
-                    for (int i = 0; i < nodes.length(); i++) {
-                        JSONObject c = nodes.getJSONObject(i);
-                        // Storing each json item in variable
-                        String id = c.getString(TAG_ID);
-                        String direccion = c.getString(TAG_DIRECCION);
-                        String coordenadas = c.getString(TAG_COORDENADAS);
-                        // creating new HashMap
-                        HashMap map = new HashMap();
-
-                        // adding each child node to HashMap key => value
-                        map.put(TAG_ID, id);
-                        map.put(TAG_DIRECCION, direccion);
-                        map.put(TAG_COORDENADAS, coordenadas);
-
-                        nodos.add(map);
-                       // Address prueba = nodos.
-                       // setMarker(coordenadas);
-                        // aqui tengo todos los nodos en el hasmap, ya los puedo pintar. Hay es que pensar como sacar del String las dos coordenadas
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
+     LatLng nodo= new LatLng(latitud,longitud);
+     mMap.addMarker(new MarkerOptions().position(nodo).icon(
+     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+     }**/
 
     /**
      * Manipulates the map once available.
@@ -157,11 +103,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Cali and move the camera
         LatLng cali = new LatLng(3.42158, -76.5205);
-        mMap.addMarker(new MarkerOptions().position(cali).title("Esta en Cali").icon(
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))); //titulo del marcador, tambien se le cambia el color al marcador
+        /**mMap.addMarker(new MarkerOptions().position(cali).title("Esta en Cali").icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));**/ //titulo del marcador, tambien se le cambia el color al marcador
         float zoomlevel = 12;
         //googleMap.moveCamera(CameraUpdateFactory.newLatLng(cali));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cali, zoomlevel));
+
+        //cargar los objetos tipo nodo en background thread
+        new LoadAllNodes().execute();
+
     }
 
     /**
@@ -221,11 +171,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
     private void setMarker(String locality, double lat, double lng) {
-    /**
-      if (markers.size() == POLYGON_POINTS) {
-      removeEverything();
-     }**/
-       //lo cambie
+        /**
+         if (markers.size() == POLYGON_POINTS) {
+         removeEverything();
+         }**/
+        //lo cambie
         locality = location;
         MarkerOptions options = new MarkerOptions()
                 .title(locality)
@@ -253,7 +203,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        circle = drawCircle(new LatLng(lat, lng));
     }
 
-
     /** private void drawPolygon() {
      PolygonOptions options = new PolygonOptions()
      .fillColor(0x330000FF)
@@ -276,5 +225,81 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      shape = null;
 
      }**/
+
+
+    class LoadAllNodes extends AsyncTask<String, String, String> {
+
+        //Antes de empezar el background thread Show Progress Dialog
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MapsActivity.this);
+            pDialog.setMessage("Cargando, Por favor espere...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        /**
+         * obteniendo todos los nodos
+         * */
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            List params = new ArrayList();
+            // getting JSON string from URL
+            JSONObject json = jParser.makeHttpRequest(URL_ALL_NODES, "GET", params);
+            // Check your log cat for JSON reponse
+            Log.d("All Nodes: ", json.toString());
+            try {
+                // Checking for SUCCESS TAG
+                int success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    // nodes found
+                    // Getting Array of nodes
+                    nodes = json.getJSONArray(TAG_GPS);
+                    // looping through All Products
+                    Log.i("Lorena", "produtos.length " + nodes.length());
+
+                    for (int i = 0; i < nodes.length(); i++) {
+                        JSONObject c = nodes.getJSONObject(i);
+                        // Storing each json item in variable
+                        String id = c.getString(TAG_ID);
+                        String direccion = c.getString(TAG_DIRECCION);
+                        String latitud = c.getString(TAG_LATITUD);
+                        String longitud = c.getString(TAG_LONGITUD);
+                        //Log.i("Lorena","latitud"+latitud);
+                        drawMarker(latitud,longitud);
+
+                        // creating new HashMap
+                       /** HashMap map = new HashMap();
+
+                        // adding each child node to HashMap key => value
+                        map.put(TAG_ID, id);
+                        map.put(TAG_DIRECCION, direccion);
+                        map.put(TAG_LATITUD, latitud);
+                        map.put(TAG_LONGITUD, longitud);
+
+                        nodos.add(map);**/
+                       // Address prueba = nodos.
+                       // setMarker(coordenadas);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        private void drawMarker(String lati, String longi){
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(Double.parseDouble(lati), Double.parseDouble(longi))).title("Titulo")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        }
+
+
+    }
 
 }
