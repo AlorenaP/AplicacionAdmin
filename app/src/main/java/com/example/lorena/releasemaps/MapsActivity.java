@@ -135,7 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Geocoder gc = new Geocoder(this);
             //tengo problema aqui ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             list = gc.getFromLocationName(location, 1);
-
             Address address = list.get(0);
             String locality = address.getLocality();
             Toast.makeText(this, locality, Toast.LENGTH_LONG).show();

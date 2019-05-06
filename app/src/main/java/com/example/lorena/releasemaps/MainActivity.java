@@ -8,22 +8,28 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnSiguiente;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSiguiente = findViewById(R.id.button);
+    }
 
-        btnSiguiente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(intent);
-            }
-        });
+    public void onClickMapa(View v){
+        Intent intent= new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(intent);
+    }
+    public void onClickUsuarios(View v){
+
+        Intent intent= new Intent(MainActivity.this, Registro.class);
+        startActivity(intent);
+    }
+
+    public void onClickReportes(View v){
+
+    }
+
+    public void onClickOtro(View v){
 
     }
 }
