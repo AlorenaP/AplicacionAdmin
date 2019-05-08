@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class Inicio extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,12 +15,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickMapa(View v){
-        Intent intent= new Intent(MainActivity.this, MapsActivity.class);
+        Intent intent= new Intent(Inicio.this, MapsActivity.class);
         startActivity(intent);
     }
     public void onClickUsuarios(View v){
 
-        Intent intent= new Intent(MainActivity.this, Registro.class);
+        Intent intent= new Intent(Inicio.this, Registro.class);
         startActivity(intent);
     }
 
