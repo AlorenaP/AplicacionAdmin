@@ -26,6 +26,8 @@ public class Inicio extends AppCompatActivity {
 
     public void onClickReportes(View v){
 
+        onBackPressed();
+
     }
 
     public void onClickOtro(View v){

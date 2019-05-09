@@ -1,7 +1,9 @@
 package com.example.lorena.releasemaps;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,72 +33,114 @@ public class Registro extends AppCompatActivity {
     private EditText telefono;
     private EditText correo;
     private EditText genero;
-    private  EditText empresa;
     private Button btnRegistro;
     private RadioButton checkOp;
     private RadioButton checkInst;
     private RadioButton checkAdmin;
     private String rol;
+    private String contrasena;
+    private String nombreUsuaruio;
+    private String cedulaUsuario;
+    private String nombreEmpre;
+    private String numCelular;
+    private String email;
+    private String generoUsu;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
-        //inicializacion
-
+        //instanciación
         nombre = findViewById(R.id.editNombre);
         cedula = findViewById(R.id.editCedula);
         nombreEmpresa = findViewById(R.id.editEmpresa);
         telefono = findViewById(R.id.editTelefono);
         correo = findViewById(R.id.editCorreo);
         genero = findViewById(R.id.editGenero);
-        empresa =findViewById(R.id.editEmpresa);
         btnRegistro = findViewById(R.id.btnRegistro);
         checkAdmin = findViewById(R.id.admin);
         checkInst = findViewById(R.id.instal);
         checkOp = findViewById(R.id.op);
+
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nombreUsuaruio = nombre.getText().toString();
+                cedulaUsuario = cedula.getText().toString();
+                nombreEmpre = nombreEmpresa.getText().toString();
+                numCelular = telefono.getText().toString();
+                email = correo.getText().toString();
+                generoUsu = genero.getText().toString();
+                contrasena = cedula.getText().toString();
 
-                String nombreUsuaruio = nombre.getText().toString();
-                String cedulaUsuario = cedula.getText().toString();
-                String nombreEmpre = nombreEmpresa.getText().toString();
-                String numCelular = telefono.getText().toString();
-                String email = correo.getText().toString();
-                String generoUsu = genero.getText().toString();
-
-                if(checkAdmin.isChecked()){
-                   rol= checkAdmin.getText().toString();
-                }else if (checkInst.isChecked()){
-                    rol=checkInst.getText().toString();
-                }else{
-                    rol=checkOp.getText().toString();
+                if (checkAdmin.isChecked()) {
+                    rol = checkAdmin.getText().toString();
+                } else if (checkInst.isChecked()) {
+                    rol = checkInst.getText().toString();
+                } else {
+                    rol = checkOp.getText().toString();
                 }
+                if (nombreUsuaruio.isEmpty() || cedulaUsuario.isEmpty() || nombreEmpre.isEmpty() ||
+                        numCelular.isEmpty() || email.isEmpty() || generoUsu.isEmpty() || rol.isEmpty()) {
+                    Toast.makeText(Registro.this, "Ningun campo debe estar vacio. Todos son requeridos", Toast.LENGTH_LONG).show();
+                } else {
+                    new Insertar(Registro.this).execute();
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(Registro.this);
+                    final View mView = getLayoutInflater().inflate(R.layout.activity_alert_dialog, null);
+                    Button btn_Si = mView.findViewById(R.id.btn_Si);
+                    Button btn_No = mView.findViewById(R.id.btn_No);
+                    //notificar en un mensaje que agrego con exito, y si desea agregar un nuevo usuario, o no,
+                    // la regresa al inicio en el caso del no
+                    if(btn_Si.isClickable()){
+                        btn_Si.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent regresa= new Intent(mView.getContext(), Registro.class);
+                                startActivity(regresa);
+                                finish();
+                            }
+                        });
 
-                new Insertar(Registro.this).execute();
+                    }if (btn_No.isClickable()){
+                        btn_No.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mView.getContext(), Inicio.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                    }
+                    mBuilder.setView(mView);
+                    AlertDialog alDialog = mBuilder.create();
+                    alDialog.show();
+                }
             }
         });
-
     }
 
 
-    private boolean registrar(String cedula, String nombre, String rol, String correo, String genero, String celular, String empresa){
+    private boolean registrar(String cedulaUs, String nombreUs, String contrasenia, String rolUs, String correoUs,
+                              String generoUs, String celular, String empresaUs){
 
         HttpClient httpClient;
         List<NameValuePair> nameValuePairs;
         HttpPost httpPost;
         httpClient = new DefaultHttpClient();
-        httpPost = new HttpPost("http://172.30.200.99/testgeo/usuarios.php");//url del servidor
+        httpPost = new HttpPost("http://172.30.200.99/testgeo/registrar.php");//url del servidor
         //empezamos añadir nuestros dato
         nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("cedula", nombre.trim()));
-        nameValuePairs.add(new BasicNameValuePair("nombre",cedula.trim()));
-        nameValuePairs.add(new BasicNameValuePair("rol", rol.trim()));
-        nameValuePairs.add(new BasicNameValuePair("correo", rol.trim()));
-        nameValuePairs.add(new BasicNameValuePair("genero", rol.trim()));
-        nameValuePairs.add(new BasicNameValuePair("telefono", rol.trim()));
-        nameValuePairs.add(new BasicNameValuePair("empresa", rol.trim()));
+        nameValuePairs.add(new BasicNameValuePair("cedula", cedulaUs.trim()));
+        nameValuePairs.add(new BasicNameValuePair("nombre",nombreUs.trim()));
+        nameValuePairs.add(new BasicNameValuePair("contrasena", contrasenia.trim()));
+        nameValuePairs.add(new BasicNameValuePair("rol", rolUs.trim()));
+        nameValuePairs.add(new BasicNameValuePair("correo", correoUs.trim()));
+        nameValuePairs.add(new BasicNameValuePair("genero", generoUs.trim()));
+        nameValuePairs.add(new BasicNameValuePair("telefono", celular.trim()));
+        nameValuePairs.add(new BasicNameValuePair("empresa", empresaUs.trim()));
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             httpClient.execute(httpPost);
@@ -120,8 +164,8 @@ public class Registro extends AppCompatActivity {
         }
         protected String doInBackground(String... params) {
             // TODO Auto-generated method stub
-            if(registrar(cedula.toString(),nombre.toString(),rol,correo.toString(),genero.toString(), telefono.toString(),empresa.toString()))
-                context.runOnUiThread(new Runnable(){
+            if(registrar(cedulaUsuario,nombreUsuaruio, contrasena, rol,email, generoUsu, numCelular, nombreEmpre))
+                context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
@@ -132,10 +176,10 @@ public class Registro extends AppCompatActivity {
                         correo.setText("");
                         genero.setText("");
                         telefono.setText("");
-                        empresa.setText("");
+                        nombreEmpresa.setText("");
                     }
                 });
-            else
+             else
                 context.runOnUiThread(new Runnable(){
                     @Override
                     public void run() {
