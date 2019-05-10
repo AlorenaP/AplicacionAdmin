@@ -47,7 +47,6 @@ public class Registro extends AppCompatActivity {
     private String generoUsu;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +63,8 @@ public class Registro extends AppCompatActivity {
         checkAdmin = findViewById(R.id.admin);
         checkInst = findViewById(R.id.instal);
         checkOp = findViewById(R.id.op);
-
+//Si considerás que alguno de los exámenes que te fueron asignados no son acordes a
+// tu perfil, envíanos un correo electrónico a jobs@bairesdev.com indicando de qué examen se trata.
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,6 +189,19 @@ public class Registro extends AppCompatActivity {
                 });
             return null;
         }
+    }
+
+
+
+    public void update(String cedulaUsu, String nombreUsu, String contrasenia, String rolUsu,
+                       String emailUsu, String generoUsu, String numCelUsu, String empresaUsu){
+
+        HttpClient httpClient;
+        List<NameValuePair> nameValuePairs;
+        HttpPost httpPost;
+        httpClient = new DefaultHttpClient();
+        httpPost = new HttpPost("http://172.30.200.99/testgeo/update.php");//url del servidor
+
     }
 
 }

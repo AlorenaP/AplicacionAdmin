@@ -40,10 +40,13 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:theme="@style/EditorTheme" />
         <activity android:name=".Login" />
         <activity android:name=".Registro" />
-        <activity android:name=".Inicio"/>
+        <activity android:name=".Inicio" />
+        <activity android:name=".GestionarUsuario" />
+        <activity android:name=".ActualizarUsuario"></activity>
     </application>
 
 </manifest>

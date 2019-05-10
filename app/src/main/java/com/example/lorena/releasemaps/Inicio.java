@@ -20,7 +20,7 @@ public class Inicio extends AppCompatActivity {
     }
     public void onClickUsuarios(View v){
 
-        Intent intent= new Intent(Inicio.this, Registro.class);
+        Intent intent= new Intent(Inicio.this, GestionarUsuario.class);
         startActivity(intent);
     }
 
