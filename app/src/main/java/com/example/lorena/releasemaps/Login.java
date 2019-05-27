@@ -1,6 +1,7 @@
 package com.example.lorena.releasemaps;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,9 +14,12 @@ public class Login extends AppCompatActivity {
     private EditText cedula;
     private EditText password;
     private Button btnIngresar;
+    String rol;
+    public final static String OPERARIO="operario";
+    public final static String INSTALADOR="instalador";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -23,19 +27,29 @@ public class Login extends AppCompatActivity {
         password=findViewById(R.id.editPassword);
         btnIngresar=findViewById(R.id.btnIngresar);
 
-        btnIngresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cedula.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
+    }
 
-                    Toast.makeText(Login.this, "Ingresa los campos requeridos", Toast.LENGTH_SHORT).show();
+    public void onClic(View v){
 
-                } else {
-                    loginUsuario(cedula.getText().toString(), password.getText().toString());
-                }
+        if (cedula.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
 
+            Toast.makeText(Login.this, "Ingresa los campos requeridos", Toast.LENGTH_SHORT).show();
+
+        } else {
+           // loginUsuario(cedula.getText().toString(), password.getText().toString());
+            BackgroundWorker backgroundWorker= new BackgroundWorker(this);
+            backgroundWorker.execute(rol, cedula.getText().toString(), password.getText().toString());
+            if(rol.equals(OPERARIO)){
+                Intent iOperario= new Intent(Login.this, Inicio.class);
+                startActivity(iOperario);
             }
-        });
+
+            else if (rol.equals(INSTALADOR)){
+                Intent iInstalador=new Intent(Login.this, Splash.class);
+                startActivity(iInstalador);
+            }
+        }
+
     }
 
 
@@ -44,17 +58,17 @@ public class Login extends AppCompatActivity {
 
         //validar con la base de datos
 
-        //auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-           // @Override
-           // public void onComplete(@NonNull Task<AuthResult> task) {
-              //  if (task.isSuccessful()) {
+       // auth.signInWithEmailAndPassword(cedula, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+          //  @Override
+          //  public void onComplete(@NonNull Task<AuthResult> task) {
+            //    if (task.isSuccessful()) {
                     Intent i = new Intent(Login.this, Inicio.class);
                     startActivity(i);
                     finish();
                     Toast.makeText(Login.this, "Login correcto", Toast.LENGTH_SHORT).show();
 
-                //} else {
-                    Toast.makeText(Login.this, "Error en el correo y/o contraseña", Toast.LENGTH_SHORT).show();
+               // } else {
+               //     Toast.makeText(Login.this, "Error en el correo y/o contraseña", Toast.LENGTH_SHORT).show();
                // }
            // }
        // });

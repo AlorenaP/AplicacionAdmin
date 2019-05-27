@@ -3,30 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_orange_light"
     android:orientation="vertical"
     tools:context=".Login">
-
-
     <EditText
         android:id="@+id/editCedula"
         android:layout_width="match_parent"
+        android:hint="Usuario"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:ems="10"
         android:inputType="numberDecimal" />
-
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Contraseña"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textPassword" />
-
     <Button
         android:id="@+id/btnIngresar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Iniciar" />
+        android:text="Iniciar Sesión" />
 </LinearLayout>

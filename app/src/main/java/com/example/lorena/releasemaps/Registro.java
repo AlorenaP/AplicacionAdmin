@@ -7,6 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -29,10 +31,10 @@ public class Registro extends AppCompatActivity {
 
     private EditText nombre;
     private EditText cedula;
-    private EditText nombreEmpresa;
+    private AutoCompleteTextView nombreEmpresa;
     private EditText telefono;
     private EditText correo;
-    private EditText genero;
+    private AutoCompleteTextView genero;
     private Button btnRegistro;
     private RadioButton checkOp;
     private RadioButton checkInst;
@@ -45,6 +47,9 @@ public class Registro extends AppCompatActivity {
     private String numCelular;
     private String email;
     private String generoUsu;
+
+    String [] empresas ={"Movistar", "Claro","Tigo", "Une","Emcali","Avantel"};
+    String [] gener={"Femenino","Maculino"};
 
 
     @Override
@@ -63,6 +68,11 @@ public class Registro extends AppCompatActivity {
         checkAdmin = findViewById(R.id.admin);
         checkInst = findViewById(R.id.instal);
         checkOp = findViewById(R.id.op);
+        nombreEmpresa.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,empresas));
+        nombreEmpresa.setThreshold(1);
+        genero.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,gener));
+        genero.setThreshold(1);
+
 //Si considerás que alguno de los exámenes que te fueron asignados no son acordes a
 // tu perfil, envíanos un correo electrónico a jobs@bairesdev.com indicando de qué examen se trata.
         btnRegistro.setOnClickListener(new View.OnClickListener() {

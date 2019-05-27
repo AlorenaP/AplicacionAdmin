@@ -26,7 +26,7 @@
         android:inputType="number"
         android:hint="Número de cedula"/>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editEmpresa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,19 +51,19 @@
             android:id="@+id/op"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="8dp"
             android:text="Operario"/>
         <RadioButton
             android:id="@+id/instal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:text="Instalador"/>
         <RadioButton
             android:id="@+id/admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:text="Administrador"/>
     </RadioGroup>
 
@@ -85,7 +85,7 @@
         android:hint="Correo eléctronico"
         android:inputType="textEmailAddress" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editGenero"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
