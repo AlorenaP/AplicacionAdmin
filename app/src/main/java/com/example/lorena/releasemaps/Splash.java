@@ -16,7 +16,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3500);
 
                     irALogin();
 
