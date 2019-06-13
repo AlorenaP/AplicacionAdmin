@@ -28,8 +28,6 @@ public class Login extends AppCompatActivity {
     private EditText cedula;
     private EditText password;
     private Button btnIngresar;
-    String rol;
-    public final static String ADMINISTRADOR="Administrador";
 
 
     @Override
@@ -46,40 +44,19 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 final String userName=cedula.getText().toString();
                 final String contra=password.getText().toString();
-
                 if (userName.isEmpty() || contra.isEmpty()) {
 
                     Toast.makeText(Login.this, "Ingresa los campos requeridos", Toast.LENGTH_SHORT).show();
 
                 } else {
                     new BackgroundWorker().execute(userName, contra);
+                    cedula.setText("");
+                    password.setText("");
                 }
             }
         });
 
     }
-
-   /** public void onClic(View v){
-
-        if (cedula.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
-
-            Toast.makeText(Login.this, "Ingresa los campos requeridos", Toast.LENGTH_SHORT).show();
-
-        } else {
-           // loginUsuario(cedula.getText().toString(), password.getText().toString());
-            BackgroundWorker backgroundWorker= new BackgroundWorker(this);
-            backgroundWorker.execute(rol, cedula.getText().toString(), password.getText().toString());
-            if(rol.equals(ADMINISTRADOR)){
-                Intent iOperario= new Intent(Login.this, Inicio.class);
-                startActivity(iOperario);
-            }else if(!rol.equals(ADMINISTRADOR)){
-
-                Toast.makeText(Login.this, "Su rol no tiene privilegios de administrador", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-    }**/
-
 
 
     public class BackgroundWorker extends AsyncTask<String, String, String> {
@@ -121,7 +98,6 @@ public class Login extends AppCompatActivity {
                 // setDoInput and setDoOutput method depict handling of both send and receive
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
-                // Ext. 8331.
                 // Append parameters to URL
                 Uri.Builder builder = new Uri.Builder()
                         .appendQueryParameter("cedula", params[0])
@@ -155,16 +131,13 @@ public class Login extends AppCompatActivity {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                     StringBuilder result = new StringBuilder();
                     String line;
-
                     while ((line = reader.readLine()) != null) {
                         result.append(line);
                     }
-
                     // Pass data to onPostExecute method
                     return (result.toString());
 
                 } else {
-
                     return ("unsuccessful");
                 }
 
@@ -189,15 +162,13 @@ public class Login extends AppCompatActivity {
             } else if (result.equalsIgnoreCase("false")) {
 
                 // If username and password does not match display a error message
-                Toast.makeText(Login.this, "Invalid userename or password", Toast.LENGTH_LONG);
+                Toast.makeText(Login.this, "El usuario o la contraseña es invalidad", Toast.LENGTH_LONG).show();
 
             } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
 
-                Toast.makeText(Login.this, "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG);
+                Toast.makeText(Login.this, "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
 
             }
         }
     }
-
-
 }

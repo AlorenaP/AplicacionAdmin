@@ -7,20 +7,17 @@
     tools:context=".Inicio">
 
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_gravity="center_horizontal"
-        android:hint="Donde quieres ir" />
-
-    <Button
+    <SearchView
+        android:id="@+id/searchGo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go"
-        android:id="@+id/button"
-        android:onClick="geoLocate"
-        android:layout_gravity="center_horizontal" />
+        android:queryHint="Buscar..."
+        android:layout_margin="10dp"
+        android:elevation="5dp"
+        android:iconifiedByDefault="false"
+        android:background="@drawable/rounded_edittext"
+        />
+
     <fragment
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"

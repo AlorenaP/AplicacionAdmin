@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -40,14 +41,6 @@ import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private String location;
-    // Progress Dialog
-    private ProgressDialog pDialog;
-    // Creating JSON Parser object
-    JSONParser jParser = new JSONParser();
-    JSONObject json;
-    ArrayList<HashMap<String, String>> nodos;
     // url to get all nodes list
     private static String URL_ALL_NODES = "http://172.30.200.99/testgeo/nodos.php";
     // JSON Node names
@@ -57,20 +50,72 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG_DIRECCION = "direccion";
     private static final String TAG_LATITUD = "latitud";
     private static final String TAG_LONGITUD = "longitud";
-
+    private GoogleMap mMap;
+    private String location;
+    SearchView searchView;
+    // Progress Dialog
+    private ProgressDialog pDialog;
+    // Creating JSON Parser object
+    JSONParser jParser = new JSONParser();
+    JSONObject json;
+    ArrayList<HashMap<String, String>> nodos;
     private String latitud, longitud;
     // objetos JSONArray
     JSONArray nodes = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        searchView = findViewById(R.id.searchGo);
         // Hashmap para los nodos
-        nodos = new ArrayList<HashMap<String, String>>();
+        //nodos = new ArrayList<HashMap<String, String>>();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        //llamado a cargar los nodos registrados
+        new LoadAllNodes().execute();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                location=searchView.getQuery().toString();
+                List<Address> addressList = null;
+                if (!location.equals("") || !location.isEmpty()) {
+                    Geocoder geocoder = new Geocoder(MapsActivity.this);
+
+                    try{
+                        addressList = geocoder.getFromLocationName(location,1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(!addressList.isEmpty()){
+                    Address address=addressList.get(0);
+
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+                    }else{
+                        Toast.makeText(MapsActivity.this, "Por favor ingresar el nombre correcto del lugar a ubicar", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        mapFragment.getMapAsync(MapsActivity.this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+       /** int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
         if (status == ConnectionResult.SUCCESS) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map); //referencia a el fragment del mapa de cali
@@ -79,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, (Activity) getApplicationContext(), 10);
             dialog.show();
-        }
+        }**/
     }
 
 
@@ -126,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @throws IOException
      */
 
-    public void geoLocate(View view) throws IOException {
+    /**public void geoLocate(View view) throws IOException {
         List<Address> list = null;
         EditText et = (EditText) findViewById(R.id.editText);
         location = et.getText().toString();
@@ -148,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(MapsActivity.this, "Por favor ingresar el nombre del lugar a ubicar", Toast.LENGTH_LONG).show();
         }
 
-    }
+    }**/
 
     ArrayList<Marker> markers = new ArrayList<Marker>();
     //  static final int POLYGON_POINTS = 5;
@@ -263,7 +308,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
-                    // nodes found
                     // Getting Array of nodes
                     nodes = json.getJSONArray(TAG_GPS);
                     // looping through All Products
