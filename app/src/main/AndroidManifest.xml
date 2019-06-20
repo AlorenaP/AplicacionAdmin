@@ -46,7 +46,7 @@
         <activity android:name=".Registro" />
         <activity android:name=".Inicio" />
         <activity android:name=".GestionarUsuario" />
-        <activity android:name=".ActualizarUsuario"></activity>
+        <activity android:name=".ActualizarUsuario" />
     </application>
 
 </manifest>

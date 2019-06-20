@@ -11,18 +11,24 @@
 
         <TextView
             android:id="@+id/renglon_nombreUsuario"
-            android:layout_width="88dp"
+            android:layout_width="37dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/renglon_cedulaUsuario"
+            android:layout_width="43dp"
             android:layout_height="36dp"
             android:layout_marginLeft="15dp" />
 
         <TextView
             android:id="@+id/renglon_rol"
-            android:layout_width="81dp"
+            android:layout_width="42dp"
             android:layout_height="36dp"
             android:layout_marginRight="20dp" />
 
         <LinearLayout
-            android:layout_width="272dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -30,12 +36,14 @@
                 android:id="@+id/btnEditar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:onClick="onClicCrud"
                 android:text="Editar" />
 
             <Button
                 android:id="@+id/btnEliminar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="onClicDelete"
                 android:text="Eliminar" />
 
         </LinearLayout>

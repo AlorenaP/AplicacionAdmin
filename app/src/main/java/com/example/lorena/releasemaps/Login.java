@@ -45,9 +45,7 @@ public class Login extends AppCompatActivity {
                 final String userName=cedula.getText().toString();
                 final String contra=password.getText().toString();
                 if (userName.isEmpty() || contra.isEmpty()) {
-
                     Toast.makeText(Login.this, "Ingresa los campos requeridos", Toast.LENGTH_SHORT).show();
-
                 } else {
                     new BackgroundWorker().execute(userName, contra);
                     cedula.setText("");
@@ -72,7 +70,6 @@ public class Login extends AppCompatActivity {
             pdLoading.setMessage("\tLoading...");
             pdLoading.setCancelable(false);
             pdLoading.show();
-
         }
 
         @Override
