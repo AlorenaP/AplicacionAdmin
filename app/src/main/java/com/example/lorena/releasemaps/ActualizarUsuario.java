@@ -107,7 +107,7 @@ public class ActualizarUsuario extends AppCompatActivity {
 
     public void onClicDelete(View v) {
 
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(ActualizarUsuario.this);
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(v.getContext());
         View mView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
         Button btn_ok = mView.findViewById(R.id.btn_ok);
         Button btn_cancel = mView.findViewById(R.id.btn_cancel);

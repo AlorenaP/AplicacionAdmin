@@ -1,6 +1,7 @@
 package com.example.lorena.releasemaps;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -39,8 +40,7 @@ public class Adaptador extends ArrayAdapter<String> {
     public View getView(final int position, @NonNull View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //aprovechamos el cache del ListView
         if (convertView == null) {
@@ -53,6 +53,38 @@ public class Adaptador extends ArrayAdapter<String> {
         viewHolder.txt2.setText(cedula[position]);
         viewHolder.txt3.setText(nombre[position]);
         viewHolder.txt4.setText(rol[position]);
+        boolean btnBorrar=viewHolder.btnDelete.isClickable();
+        boolean btnEdit=viewHolder.btnUpdate.isClickable();
+        if(btnBorrar){
+
+            viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final AlertDialog.Builder alert=new AlertDialog.Builder(context);
+                    View tem = inflater.inflate(R.layout.alert_dialog, null);
+
+                    Button btn_ok = tem.findViewById(R.id.btn_ok);
+                    Button btn_cancel = tem.findViewById(R.id.btn_cancel);
+
+                    alert.setView(tem);
+                    final AlertDialog alt = alert.create();
+                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alt.dismiss();
+                        }
+                    });
+                    alt.show();
+
+                }
+            });
+
+        }else if(btnEdit){
+
+            ActualizarUsuario actualizarUsuario= new ActualizarUsuario();
+            actualizarUsuario.onClicUpdate(convertView);
+        }
 
 
         //final TextView tv_cedulaUsuario = convertView.findViewById(R.id.renglon_cedulaUsuario);
@@ -63,6 +95,8 @@ public class Adaptador extends ArrayAdapter<String> {
 
         return convertView;
     }
+
+
 
 
     class ViewHolder {

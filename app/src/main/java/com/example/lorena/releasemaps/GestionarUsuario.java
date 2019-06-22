@@ -27,9 +27,5 @@ public class GestionarUsuario extends AppCompatActivity {
 
     }
 
-    public void onClicDelete(View v){
-
-    }
-
 
 }

@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorAccent"
-            android:text="Si"
+            android:text="Confirmar"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
