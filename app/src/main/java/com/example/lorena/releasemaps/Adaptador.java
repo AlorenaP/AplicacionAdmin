@@ -57,6 +57,7 @@ public class Adaptador extends ArrayAdapter<String> {
         boolean btnEdit=viewHolder.btnUpdate.isClickable();
         if(btnBorrar){
 
+            final ViewHolder finalViewHolder = viewHolder;
             viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,6 +76,21 @@ public class Adaptador extends ArrayAdapter<String> {
                             alt.dismiss();
                         }
                     });
+
+                    btn_ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            String cedulaUsu = finalViewHolder.txt2.getText().toString();
+                            int estado =0;
+                            String txtestado=Integer.toString(estado);
+
+                            DeleteUsuario conexion = new DeleteUsuario();
+                            conexion.execute(txtestado, cedulaUsu);
+
+                            context.finish(); // finaliza y me regresa al contexto anterior.
+                        }
+                    });
                     alt.show();
 
                 }
@@ -82,8 +98,12 @@ public class Adaptador extends ArrayAdapter<String> {
 
         }else if(btnEdit){
 
-            ActualizarUsuario actualizarUsuario= new ActualizarUsuario();
-            actualizarUsuario.onClicUpdate(convertView);
+            viewHolder.btnUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
 

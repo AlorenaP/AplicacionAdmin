@@ -47,6 +47,7 @@ public class Registro extends AppCompatActivity {
     private String numCelular;
     private String email;
     private String generoUsu;
+    private int estado;
 
     String [] empresas ={"Movistar", "Claro","Tigo", "Une","Emcali","Avantel"};
     String [] gener={"Femenino","Maculino"};
@@ -72,9 +73,6 @@ public class Registro extends AppCompatActivity {
         nombreEmpresa.setThreshold(1);
         genero.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,gener));
         genero.setThreshold(1);
-
-//Si considerás que alguno de los exámenes que te fueron asignados no son acordes a
-// tu perfil, envíanos un correo electrónico a jobs@bairesdev.com indicando de qué examen se trata.
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +83,7 @@ public class Registro extends AppCompatActivity {
                 email = correo.getText().toString();
                 generoUsu = genero.getText().toString();
                 contrasena = cedula.getText().toString();
+                estado=1;
 
                 if (checkAdmin.isChecked()) {
                     rol = checkAdmin.getText().toString();
@@ -103,7 +102,7 @@ public class Registro extends AppCompatActivity {
                     Button btn_Si = mView.findViewById(R.id.btn_Si);
                     Button btn_No = mView.findViewById(R.id.btn_No);
                     //notificar en un mensaje que agrego con exito, y si desea agregar un nuevo usuario, o no,
-                    // la regresa al inicio en el caso del no
+                    // en el caso del NO la regresa al inicio en el caso del no
                     if(btn_Si.isClickable()){
                         btn_Si.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -133,7 +132,7 @@ public class Registro extends AppCompatActivity {
     }
 
 
-    private boolean registrar(String cedulaUs, String nombreUs, String contrasenia, String rolUs, String correoUs,
+    private boolean registrar(String cedulaUs, String nombreUs, String contrasenia, String rolUs, int estado, String correoUs,
                               String generoUs, String celular, String empresaUs){
 
         HttpClient httpClient;
@@ -147,6 +146,7 @@ public class Registro extends AppCompatActivity {
         nameValuePairs.add(new BasicNameValuePair("nombre",nombreUs.trim()));
         nameValuePairs.add(new BasicNameValuePair("contrasena", contrasenia.trim()));
         nameValuePairs.add(new BasicNameValuePair("rol", rolUs.trim()));
+        nameValuePairs.add(new BasicNameValuePair("estado", Integer.toString(estado)));
         nameValuePairs.add(new BasicNameValuePair("correo", correoUs.trim()));
         nameValuePairs.add(new BasicNameValuePair("genero", generoUs.trim()));
         nameValuePairs.add(new BasicNameValuePair("telefono", celular.trim()));
@@ -174,7 +174,7 @@ public class Registro extends AppCompatActivity {
         }
         protected String doInBackground(String... params) {
             // TODO Auto-generated method stub
-            if(registrar(cedulaUsuario,nombreUsuaruio, contrasena, rol,email, generoUsu, numCelular, nombreEmpre))
+            if(registrar(cedulaUsuario,nombreUsuaruio, contrasena, rol,estado,email, generoUsu, numCelular, nombreEmpre))
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

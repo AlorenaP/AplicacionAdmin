@@ -1,6 +1,7 @@
 package com.example.lorena.releasemaps;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -101,44 +102,6 @@ public class ActualizarUsuario extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-    }
-
-
-    public void onClicDelete(View v) {
-
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(v.getContext());
-        View mView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
-        Button btn_ok = mView.findViewById(R.id.btn_ok);
-        Button btn_cancel = mView.findViewById(R.id.btn_cancel);
-
-        mBuilder.setView(mView);
-
-        final AlertDialog alertDialog = mBuilder.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                alertDialog.dismiss();
-
-            }
-        });
-
-
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //enviar el aupdate de cambio de estado en base de datos.
-
-            }
-        });
-
-    }
-
-    public void onClicUpdate(View v){
 
     }
 
