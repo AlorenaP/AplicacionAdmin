@@ -1,6 +1,5 @@
 package com.example.lorena.releasemaps;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -15,14 +14,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class DeleteUsuario extends AsyncTask<String, String, String> {
+public class UpdateUsuario extends AsyncTask<String, String, String> {
+
 
     @Override
     protected String doInBackground(String... params) {
         HttpURLConnection conn;
         URL url = null;
         try {
-            url = new URL("http://192.168.0.5/testgeo/deleteUsu.php");
+            url = new URL("http://192.168.0.5/testgeo/updateUsu.php");
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -41,8 +41,9 @@ public class DeleteUsuario extends AsyncTask<String, String, String> {
             conn.setDoOutput(true);
             // Append parameters to URL
             Uri.Builder builder = new Uri.Builder()
-                    .appendQueryParameter("estado", params[0])
-                    .appendQueryParameter("cedula", params[1]);
+                    .appendQueryParameter("nombre", params[0])
+                    .appendQueryParameter("cedula", params[1])
+                    .appendQueryParameter("rol",params[2]);
             String query = builder.build().getEncodedQuery();
 
             // Open connection for sending data
@@ -84,5 +85,4 @@ public class DeleteUsuario extends AsyncTask<String, String, String> {
             conn.disconnect();
         }
     }
-
 }

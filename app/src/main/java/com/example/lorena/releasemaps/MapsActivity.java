@@ -42,7 +42,7 @@ import java.util.Map;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     // url to get all nodes list
-    private static String URL_ALL_NODES = "http://172.30.200.99/testgeo/nodos.php";
+    private static String URL_ALL_NODES = "http://192.168.0.5/testgeo/nodos.php";
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_GPS = "gps";

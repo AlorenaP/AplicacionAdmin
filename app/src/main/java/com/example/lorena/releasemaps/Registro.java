@@ -139,7 +139,7 @@ public class Registro extends AppCompatActivity {
         List<NameValuePair> nameValuePairs;
         HttpPost httpPost;
         httpClient = new DefaultHttpClient();
-        httpPost = new HttpPost("http://172.30.200.99/testgeo/registrar.php");//url del servidor
+        httpPost = new HttpPost("http://192.168.0.5/testgeo/registrar.php");//url del servidor
         //empezamos añadir nuestros dato
         nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("cedula", cedulaUs.trim()));
@@ -201,17 +201,5 @@ public class Registro extends AppCompatActivity {
         }
     }
 
-
-
-    public void update(String cedulaUsu, String nombreUsu, String contrasenia, String rolUsu,
-                       String emailUsu, String generoUsu, String numCelUsu, String empresaUsu){
-
-        HttpClient httpClient;
-        List<NameValuePair> nameValuePairs;
-        HttpPost httpPost;
-        httpClient = new DefaultHttpClient();
-        httpPost = new HttpPost("http://172.30.200.99/testgeo/update.php");//url del servidor
-
-    }
 
 }

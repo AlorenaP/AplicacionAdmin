@@ -9,23 +9,61 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
+        <ViewSwitcher
+            android:id="@+id/vsnombre"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/renglon_nombreUsuario"
-            android:layout_width="37dp"
-            android:layout_height="36dp"
-            android:layout_marginLeft="15dp" />
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp" />
 
+            <EditText
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:id="@+id/renglon_editNombre"
+                android:layout_marginLeft="5dp"/>
+        </ViewSwitcher>
+
+
+        <ViewSwitcher
+            android:id="@+id/vscedula"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
         <TextView
             android:id="@+id/renglon_cedulaUsuario"
-            android:layout_width="43dp"
-            android:layout_height="36dp"
-            android:layout_marginLeft="15dp" />
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp" />
 
+            <EditText
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:id="@+id/renglon_editCedula"
+                android:layout_marginLeft="5dp"/>
+        </ViewSwitcher>
+
+
+
+        <ViewSwitcher
+            android:id="@+id/vsrol"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
         <TextView
             android:id="@+id/renglon_rol"
-            android:layout_width="42dp"
-            android:layout_height="36dp"
-            android:layout_marginRight="20dp" />
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp" />
+
+            <EditText
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:id="@+id/renglon_editRol"
+                android:layout_marginRight="5dp"/>
+
+        </ViewSwitcher>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,14 +74,24 @@
                 android:id="@+id/btnEditar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:onClick="onClicUpdate"
                 android:text="Editar" />
 
+
+            <ViewSwitcher
+                android:id="@+id/vsBoton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
             <Button
                 android:id="@+id/btnEliminar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="Eliminar" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnGuardar"
+                android:text="Guardar"/>
+            </ViewSwitcher>
 
         </LinearLayout>
 
