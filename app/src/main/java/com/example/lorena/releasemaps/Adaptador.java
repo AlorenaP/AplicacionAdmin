@@ -149,11 +149,14 @@ public class Adaptador extends ArrayAdapter<String> {
 
                             UpdateUsuario conexionUp = new UpdateUsuario();
                             conexionUp.execute(nombreUsu, cedulaUsu, rolUsu); //se envia cambios a DB
+                            finalViewHolder1.vsBoton.showNext();
                             finalViewHolder1.vsNombre.showNext();
+                            finalViewHolder1.vsRol.showNext();
+                            finalViewHolder1.vsCedula.showNext();
 
                             Toast.makeText(context,"Información Actualizada con exito", Toast.LENGTH_SHORT).show();
-                            context.onBackPressed(); // actualiza, pero al actulaizar el num de cedula no lo permite crea
-                            // conflicto, porque es el filtro dela consulta :(
+                            //context.onBackPressed(); // actualiza, pero al actulaizar el num de cedula no lo permite crea
+                            // conflicto, porque es el filtro dela consulta y es unique en BD :(
 
                         }
                     });
