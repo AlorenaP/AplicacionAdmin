@@ -42,7 +42,7 @@ import java.util.Map;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     // url to get all nodes list
-    private static String URL_ALL_NODES = "http://192.168.0.5/testgeo/nodos.php";
+    private static String URL_ALL_NODES = "http://192.168.0.3/testgeo/nodos.php";
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_GPS = "gps";
@@ -50,11 +50,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG_DIRECCION = "direccion";
     private static final String TAG_LATITUD = "latitud";
     private static final String TAG_LONGITUD = "longitud";
+    private static final String TAG_ESTADO ="estado";
+
     private GoogleMap mMap;
     private String location;
     SearchView searchView;
-    // Progress Dialog
-    private ProgressDialog pDialog;
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     JSONObject json;
@@ -68,7 +68,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         searchView = findViewById(R.id.searchGo);
         // Hashmap para los nodos
         //nodos = new ArrayList<HashMap<String, String>>();
@@ -77,32 +76,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         //llamado a cargar los nodos registrados
         new LoadAllNodes().execute();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 location=searchView.getQuery().toString();
                 List<Address> addressList = null;
                 if (!location.equals("") || !location.isEmpty()) {
                     Geocoder geocoder = new Geocoder(MapsActivity.this);
-
                     try{
                         addressList = geocoder.getFromLocationName(location,1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                     if(!addressList.isEmpty()){
                     Address address=addressList.get(0);
-
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
                     }else{
-                        Toast.makeText(MapsActivity.this, "Por favor ingresar el nombre correcto del lugar a ubicar", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MapsActivity.this, "Por favor ingresar el nombre correcto " +
+                                "del lugar a ubicar", Toast.LENGTH_LONG).show();
                     }
                 }
-
                 return false;
             }
 
@@ -262,6 +256,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
      }**/
 
+
+
+    /**
+     * clase encargada de obtener todos los nodos de la base de datos en segundo plano y se pintan en el mapa
+     * */
+
     class LoadAllNodes extends AsyncTask<String, Void, String> {
 
         //Antes de empezar el background thread Show Progress Dialog
@@ -277,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         /**
-         * obteniendo todos los nodos
+         * obtengo todos los nodos
          * */
         protected String doInBackground(String... args) {
 
@@ -305,7 +305,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected void onPostExecute(String result)
         {
             try {
-                // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
                     // Getting Array of nodes
@@ -319,12 +318,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String direccion = c.getString(TAG_DIRECCION);
                         latitud = c.getString(TAG_LATITUD);
                         longitud = c.getString(TAG_LONGITUD);
-                        //Log.i("Lorena","latitud"+latitud);
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(Double.parseDouble(latitud), Double.parseDouble(longitud))).title("Nodo")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        String estado= c.getString(TAG_ESTADO);
+
+                        if(estado.equals("activo")) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(Double.parseDouble(latitud), Double.parseDouble(longitud))).title(direccion)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        }else{
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(Double.parseDouble(latitud), Double.parseDouble(longitud))).title(direccion)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        }
                     }
                 }
+
+                //eventos de desactivar alarma, listener con información del nodo y cuando se toque cambie de color indicando que
+                // fue desactivado
             } catch (JSONException e) {
                 e.printStackTrace();
             }

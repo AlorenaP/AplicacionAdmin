@@ -26,11 +26,14 @@ public class Inicio extends AppCompatActivity {
 
     public void onClickReportes(View v){
 
-        onBackPressed();
+       Intent intent = new Intent(Inicio.this,Reportes.class);
+       startActivity(intent);
 
     }
 
     public void onClickOtro(View v){
+
+        onBackPressed(); // salir de la app
 
     }
 }
