@@ -77,7 +77,7 @@ public class Login extends AppCompatActivity {
 
             try {
 
-                url = new URL("http://192.168.0.3/testgeo/loggin.php");
+                url = new URL("http://172.30.200.99/testgeo/loggin.php");
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block

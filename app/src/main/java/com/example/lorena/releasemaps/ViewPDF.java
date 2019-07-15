@@ -16,13 +16,20 @@ public class ViewPDF extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pdf);
-        pdfView= findViewById(R.id.pdfViewer);
+
+
+        pdfView = findViewById(R.id.pdfViewer);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle!=null){
-            file= new File(bundle.getString("path",""));
+        if (bundle != null) {
+            file = new File(bundle.getString("path", ""));
         }
-        pdfView.fromFile(file).enableSwipe(true).swipeHorizontal(false);
+        pdfView.fromFile(file)
+                .enableSwipe(true)
+                .swipeHorizontal(false)
+                .enableDoubletap(true)
+                .enableAntialiasing(true)
+                .load();
 
     }
 }
