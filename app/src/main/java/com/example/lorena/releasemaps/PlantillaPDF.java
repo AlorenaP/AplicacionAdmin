@@ -34,7 +34,7 @@ public class PlantillaPDF {
     private Font fTitle = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
     private Font fSubTitle = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private Font fTex = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-    private Font fHighText = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.BOLD, BaseColor.CYAN);
+    private Font fHighText = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.BOLD, BaseColor.RED);
 
 
     public PlantillaPDF(Context contexto) {

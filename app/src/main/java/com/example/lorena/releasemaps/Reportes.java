@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 
 
-
 public class Reportes extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1 ;
@@ -33,25 +32,47 @@ public class Reportes extends AppCompatActivity {
         setContentView(R.layout.activity_reportes);
 
         int checkPermisos = ContextCompat.checkSelfPermission(Reportes.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
         if (checkPermisos != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(Reportes.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
             }
 
+    }
+
+    public void onClicInstallPDF(View view) {
         plantillaPDF = new PlantillaPDF(getApplicationContext());
         plantillaPDF.openDocument();//
         plantillaPDF.addMetaData("notengo", "que", "mostrar");
-        plantillaPDF.addTitles("las cosas", "no salen", "no hay fecha");
+        plantillaPDF.addTitles("Reporte de Instalaciones", "Instalaciones realizadas", "fecha");
         plantillaPDF.addParagraph(textoCorto);
         plantillaPDF.addParagraph(testoLargo);
         plantillaPDF.closeDocument();
+        plantillaPDF.pdfView();
 
     }
 
-
-    public void onClicPdfView(View view) {
+    public void onClicAlarmasPDF(View view){
+        plantillaPDF = new PlantillaPDF(getApplicationContext());
+        plantillaPDF.openDocument();//
+        plantillaPDF.addMetaData("notengo", "que", "mostrar");
+        plantillaPDF.addTitles("Reporte de Alarmas", "Alarmas activadas", " fecha");
+        plantillaPDF.addParagraph(textoCorto);
+        plantillaPDF.addParagraph(testoLargo);
+        plantillaPDF.closeDocument();
         plantillaPDF.pdfView();
+
+    }
+
+    public void onClicMantenimientoPDF(View view){
+        plantillaPDF = new PlantillaPDF(getApplicationContext());
+        plantillaPDF.openDocument();//
+        plantillaPDF.addMetaData("Mantenimiento", "Reporte", "Admin");
+        plantillaPDF.addTitles("Reporte de Mantenimiento", "Mantenimientos realizados", " fecha");
+        plantillaPDF.addParagraph(textoCorto);
+        plantillaPDF.addParagraph(testoLargo);
+        plantillaPDF.closeDocument();
+        plantillaPDF.pdfView();
+
     }
 
     /**public void onClicAppPDF(View v) {

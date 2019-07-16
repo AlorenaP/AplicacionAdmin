@@ -57,7 +57,7 @@ public class ActualizarUsuario extends AppCompatActivity {
         URL url = null;
 
         try {
-            url = new URL("http://192.168.0.5/testgeo/view_registros.php");
+            url = new URL("http://172.30.200.99/testgeo/view_registros.php");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             input = new BufferedInputStream(conn.getInputStream());

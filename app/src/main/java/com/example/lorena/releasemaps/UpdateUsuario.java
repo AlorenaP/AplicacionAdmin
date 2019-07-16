@@ -22,7 +22,7 @@ public class UpdateUsuario extends AsyncTask<String, String, String> {
         HttpURLConnection conn;
         URL url = null;
         try {
-            url = new URL("http://192.168.0.5/testgeo/updateUsu.php");
+            url = new URL("http://172.30.200.99/testgeo/updateUsu.php");
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

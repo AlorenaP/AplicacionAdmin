@@ -45,9 +45,7 @@ public class Adaptador extends ArrayAdapter<String> {
     @Override
     public View getView(final int position, @NonNull View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder = null;
-
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         //aprovechamos el cache del ListView
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.renglon, null, true);
@@ -62,7 +60,6 @@ public class Adaptador extends ArrayAdapter<String> {
         final boolean btnBorrar = viewHolder.btnDelete.isClickable();
         final boolean btnEditar = viewHolder.btnUpdate.isClickable();
         //final boolean btnSave = viewHolder.btnGuardar.isClickable();
-
 
         if (btnBorrar) {
 
@@ -86,11 +83,9 @@ public class Adaptador extends ArrayAdapter<String> {
                         }
                     });
 
-
                     btn_ok.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             String cedulaUsu = finalViewHolder.txt2.getText().toString();
                             int estado = 0;
                             String txtestado = Integer.toString(estado);
@@ -101,13 +96,9 @@ public class Adaptador extends ArrayAdapter<String> {
                             context.finish(); // finaliza y me regresa a la activity anterior.
                         }
                     });
-
                     alt.show(); //dialog
-
                 }
             });
-
-
         }
         if (btnEditar) {
             final ViewHolder finalViewHolder1 = viewHolder;
@@ -118,7 +109,6 @@ public class Adaptador extends ArrayAdapter<String> {
                     finalViewHolder1.vsCedula.showNext();
                     finalViewHolder1.vsNombre.showNext();
                     finalViewHolder1.vsRol.showNext(); // mirar si lo puedo cambiar al list predeterminado
-
 
                     final TextView tem = finalViewHolder1.vsNombre.findViewById(R.id.renglon_nombreUsuario);
                     finalViewHolder1.editNombre.setText(tem.getText().toString());
@@ -131,40 +121,31 @@ public class Adaptador extends ArrayAdapter<String> {
                     final TextView tem2 = finalViewHolder1.vsRol.findViewById(R.id.renglon_rol);
                     finalViewHolder1.editRol.setText(tem2.getText().toString());
                     tem2.setText(finalViewHolder1.editRol.getText().toString());
-
                     // finalViewHolder1.txt3.setEnabled(true);
                     //finalViewHolder1.txt2.setEnabled(true);
                     //finalViewHolder1.txt4.setEnabled(true);
-
                     finalViewHolder1.btnGuardar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             tem.setText(finalViewHolder1.editNombre.getText().toString());
                             String nombreUsu = tem.getText().toString();
                             tem1.setText(finalViewHolder1.editCedula.getText().toString());
                             String cedulaUsu = tem1.getText().toString();
                             tem2.setText(finalViewHolder1.editRol.getText().toString());
                             String rolUsu = tem2.getText().toString();
-
                             UpdateUsuario conexionUp = new UpdateUsuario();
                             conexionUp.execute(nombreUsu, cedulaUsu, rolUsu); //se envia cambios a DB
                             finalViewHolder1.vsBoton.showNext();
                             finalViewHolder1.vsNombre.showNext();
                             finalViewHolder1.vsRol.showNext();
                             finalViewHolder1.vsCedula.showNext();
-
                             Toast.makeText(context,"Información Actualizada con exito", Toast.LENGTH_SHORT).show();
                             //context.onBackPressed(); // actualiza, pero al actulaizar el num de cedula no lo permite crea
                             // conflicto, porque es el filtro dela consulta y es unique en BD :(
-
                         }
                     });
-
                 }
             });
-
-
         }
         /** if (btnSave) {
 
