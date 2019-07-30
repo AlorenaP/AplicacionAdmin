@@ -16,8 +16,6 @@ public class ViewPDF extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pdf);
-
-
         pdfView = findViewById(R.id.pdfViewer);
 
         Bundle bundle = getIntent().getExtras();
@@ -26,9 +24,9 @@ public class ViewPDF extends AppCompatActivity {
         }
         pdfView.fromFile(file)
                 .enableSwipe(true)
-                .swipeHorizontal(false)
-                .enableDoubletap(true)
-                .enableAntialiasing(true)
+                .swipeHorizontal(false)//leer las paginas de forma vertical
+                .enableDoubletap(true) //para hacer zoom
+                .enableAntialiasing(true) //mejora la resolución del pdf en pantallas de baja resolución
                 .load();
 
     }

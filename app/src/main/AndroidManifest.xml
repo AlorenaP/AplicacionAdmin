@@ -47,7 +47,7 @@
         <activity android:name=".Registro" />
         <activity android:name=".Inicio" />
         <activity android:name=".GestionarUsuario" />
-        <activity android:name=".ActualizarUsuario" />
+        <activity android:name=".ListaUsuarios" />
         <activity android:name=".ViewPDF" />
         <activity android:name=".Reportes"></activity>
     </application>

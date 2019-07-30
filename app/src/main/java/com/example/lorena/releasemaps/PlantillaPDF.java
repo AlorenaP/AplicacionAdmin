@@ -1,22 +1,23 @@
 package com.example.lorena.releasemaps;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfArray;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -113,6 +114,55 @@ public class PlantillaPDF {
             Log.e("addParagraph", e.toString());
         }
     }
+
+
+    /**public  void  table(ArrayList<String[]> nDatos){
+
+        for (int i = 0; i<nDatos.size(); i++){
+            tabla.addCell(nDatos.get(i).getNombre());
+            tabla.addCell(nDatos.get(i).getApellidos());
+            tabla.addCell(nDatos.get(i).getDNI());
+            tabla.addCell(nDatos.get(i).getTlf_contacto());
+            tabla.addCell(nDatos.get(i).getDireccion());
+            tabla.addCell(nDatos.get(i).getCiudad());
+            tabla.addCell(nDatos.get(i).getEmail());
+        }
+    }**/
+
+    public void createTable(ArrayList<String[]> datos){
+        try {
+        paragraph=new Paragraph();
+        paragraph.setFont(fTex);
+
+        //PdfPTable pdfPTable=new PdfPTable(header.length);//titulos de las columnas
+       // pdfPTable.setWidthPercentage(100);
+        PdfPCell pdfPCell;
+       // int indexC=0;
+       /** while (indexC<header.length){
+            pdfPCell=new PdfPCell(new Phrase(header[indexC++],fSubTitle));
+            pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            pdfPCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            pdfPTable.addCell(pdfPCell);
+        }**/
+            pdfPCell=new PdfPCell();
+        for (int indexR=0; indexR<datos.size();indexR++){
+            String[] row=datos.get(indexR);
+            for (int index=0;index<datos.size();index++){
+                pdfPCell= new PdfPCell(new Phrase(row[index]));
+                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setFixedHeight(40);
+                //pdfPTable.addCell(pdfPCell);
+            }
+        }
+        paragraph.add(pdfPCell);
+        document.add(paragraph);
+        }catch (Exception e){
+            Log.e("create Table", e.toString());
+        }
+    }
+
+
+
 
     //plantilla propia pdf
 

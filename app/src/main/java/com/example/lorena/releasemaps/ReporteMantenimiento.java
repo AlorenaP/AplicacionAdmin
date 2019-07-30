@@ -1,19 +1,10 @@
 package com.example.lorena.releasemaps;
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,41 +14,31 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ActualizarUsuario extends AppCompatActivity {
 
-    ListView listViewUsuarios;
+
+public class ReporteMantenimiento {
+
+
     StringBuilder sbResult;
-    String result = null;
     InputStream input = null;
-    private String[] cedula = null;
-    private String[] nombre = null;
-    private String[] rol = null;
+    private String result = null;
     private JSONArray json;
+    String[] cedula = null;
+    String[] nombre = null;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actualizar_usuario);
+    public ReporteMantenimiento() {
 
-        listViewUsuarios = (ListView) findViewById(R.id.list_usuarios);
-
-        //allow network in main thread
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        //retrieve
-        data();
-        //adapter
-        Adaptador adaptador = new Adaptador(ActualizarUsuario.this, cedula, nombre, rol);
-        listViewUsuarios.setAdapter(adaptador);
+        datosMantenimientos();
 
     }
 
-
-    public void data() {
+    public void datosMantenimientos() {
         URL url = null;
 
         try {
-            url = new URL("http://172.30.200.99/testgeo/view_registros.php");
+            url = new URL("http://172.30.200.99/testgeo/reportMantenimiento.php");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             input = new BufferedInputStream(conn.getInputStream());
@@ -89,20 +70,25 @@ public class ActualizarUsuario extends AppCompatActivity {
             JSONObject jsonObject = null;
             cedula = new String[json.length()];
             nombre = new String[json.length()];
-            rol = new String[json.length()];
+
 
             for (int i = 0; i < json.length(); i++) {
                 jsonObject = json.getJSONObject(i);
                 cedula[i] = jsonObject.getString("cedula");
                 nombre[i] = jsonObject.getString("nombre");
-                rol[i] = jsonObject.getString("rol");
             }
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
+    public String[] getCedula() {
+        return cedula;
+    }
+
+    public String[] getNombre() {
+        return nombre;
+    }
 }

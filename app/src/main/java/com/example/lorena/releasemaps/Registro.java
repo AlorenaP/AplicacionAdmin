@@ -48,7 +48,8 @@ public class Registro extends AppCompatActivity {
     private String email;
     private String generoUsu;
     private int estado;
-
+    private Encriptar encriptar= new Encriptar();
+    private String clave="ldkfkjdjjdíoéiyóáauúpnbbfñaawwomslppwnhggjewjdncksiqwz";
     String [] empresas ={"Movistar", "Claro","Tigo", "Une","Emcali","Avantel"};
     String [] gener={"Femenino","Maculino"};
 
@@ -174,6 +175,8 @@ public class Registro extends AppCompatActivity {
         }
         protected String doInBackground(String... params) {
             // TODO Auto-generated method stub
+
+            //String contrasenaEncriptada=encriptar.encriptar(contrasena,clave);
             if(registrar(cedulaUsuario,nombreUsuaruio, contrasena, rol,estado,email, generoUsu, numCelular, nombreEmpre))
                 context.runOnUiThread(new Runnable() {
                     @Override

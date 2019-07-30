@@ -46,7 +46,7 @@ public class Adaptador extends ArrayAdapter<String> {
     public View getView(final int position, @NonNull View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder = null;
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //aprovechamos el cache del ListView
+        //se aprovecha el cache del ListView
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.renglon, null, true);
             viewHolder = new ViewHolder(convertView);

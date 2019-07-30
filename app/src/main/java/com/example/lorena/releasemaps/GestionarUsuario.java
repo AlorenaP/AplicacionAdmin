@@ -22,7 +22,7 @@ public class GestionarUsuario extends AppCompatActivity {
     }
     public void onClicCrud(View v){
 
-        Intent intent= new Intent(GestionarUsuario.this, ActualizarUsuario.class);
+        Intent intent= new Intent(GestionarUsuario.this, ListaUsuarios.class);
         startActivity(intent);
 
     }

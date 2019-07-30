@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".Login">
 
     <ImageView
-        android:layout_width="320dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/logo_timline" />
 
     <EditText
@@ -38,17 +38,17 @@
         android:ems="10"
         android:gravity="center"
         android:hint="Contraseña"
-        android:inputType="textPassword"
+        android:inputType="numberPassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnIngresar"
-        android:layout_width="154dp"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/button_ingresar"
         android:text="Iniciar Sesión"
         android:textColor="#FFFFFF" />
 </LinearLayout>
