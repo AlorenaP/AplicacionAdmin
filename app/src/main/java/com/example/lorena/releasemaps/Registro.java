@@ -176,7 +176,7 @@ public class Registro extends AppCompatActivity {
         protected String doInBackground(String... params) {
             // TODO Auto-generated method stub
 
-            //String contrasenaEncriptada=encriptar.encriptar(contrasena,clave);
+            String contrasenaEncriptada=encriptar.encriptar(contrasena,clave);
             if(registrar(cedulaUsuario,nombreUsuaruio, contrasena, rol,estado,email, generoUsu, numCelular, nombreEmpre))
                 context.runOnUiThread(new Runnable() {
                     @Override
